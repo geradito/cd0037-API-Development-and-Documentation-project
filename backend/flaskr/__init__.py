@@ -89,7 +89,7 @@ def create_app(test_config=None):
         so i assumed i have to sort questions by category and current category will be for first question
         """
         
-        selection = Question.query.order_by(Question.id).all()
+        selection = Question.query.order_by(Question.category).all()
         current_questions = paginate_questions(request, selection)
 
         query_category = Category.query.order_by(Category.id).all()
@@ -103,7 +103,7 @@ def create_app(test_config=None):
                 "success": True,
                 "questions": current_questions,
                 "categories": row2dict(query_category),
-                "current_category": categories[1]['type'],
+                "current_category": categories[0]['type'],
                 "total_questions": len(Question.query.all()),
             }
         )
@@ -251,7 +251,10 @@ def create_app(test_config=None):
         previous_questions = body.get("previous_questions", None)
         quiz_category = body.get("quiz_category", None)
 
-        current_question = Question.query.filter(Question.category == quiz_category['id']).filter(Question.id.notin_(previous_questions)).order_by(func.random()).first()
+        if quiz_category['id'] == 0:
+            current_question = Question.query.filter(Question.id.notin_(previous_questions)).order_by(func.random()).first()
+        else:
+            current_question = Question.query.filter(Question.category == quiz_category['id']).filter(Question.id.notin_(previous_questions)).order_by(func.random()).first()
         
         if current_question is None:
             return jsonify(

@@ -24,6 +24,7 @@ class TriviaTestCase(unittest.TestCase):
         self.new_question_two = {"question": None, "answer": None, "difficulty": None, "category":None}
         self.quiz_request = {"previous_questions": [31], "quiz_category": {"type": "Geography", "id": 3} }
         self.quiz_request_two = {"previous_questions": [30,31], "quiz_category": {"type": "Geography", "id": 3} }
+        self.quiz_request_without_category = {"previous_questions": [30,31], "quiz_category": {"type": "click", "id": 0} }
 
         # binds the app to the current context
         with self.app.app_context():
@@ -141,6 +142,15 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_get_next_question_in_quiz(self):
         res = self.client().post("/quizzes", json=self.quiz_request)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["question"])
+        self.assertFalse(data["question"]["id"] in self.quiz_request["previous_questions"])
+   
+    def test_get_next_question_in_quiz_without_category(self):
+        res = self.client().post("/quizzes", json=self.quiz_request_without_category)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
