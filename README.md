@@ -98,7 +98,7 @@ The API will return three error types when requests fail:
 - Request Arguments: None
 - Returns: success True and An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
 - Sample: `curl http://127.0.0.1:5000/categories`
--response:
+- response:
 ```json
 {
   "categories": {
@@ -109,6 +109,216 @@ The API will return three error types when requests fail:
     "5": "Entertainment", 
     "6": "sports"
   }, 
+  "success": true
+}
+```
+
+#### GET /questions?page={page_number}
+- General:
+    - Fetch list of paginated questions,number of total questions, current category and all categories.
+- Request Arguments: page optional
+- Returns: success True, A list of 10 question objects, current_category name, all categories and number of total questions
+- Sample: `curl http://127.0.0.1:5000/questions?page=2`
+- response:
+```json
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "sports"
+  }, 
+  "current_category": "sports", 
+  "questions": [
+    {
+      "answer": "2012", 
+      "category": 6, 
+      "difficulty": 1, 
+      "id": 4, 
+      "question": "When did Zambia win AFCON?"
+    },
+    {
+      "answer": "9", 
+      "category": 3, 
+      "difficulty": 1, 
+      "id": 5, 
+      "question": "How many planets are in our solar system?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 12
+}
+```
+
+
+#### DELETE /questions/{question_id}
+- General:
+    - Delete a question resource using a question ID.
+- Request Arguments: question_id mandatory
+- Returns: success True, A list of paginated question objects, id of deleted question and number of total questions remaining 
+- Sample: `curl -X DELETE http://127.0.0.1:5000/questions/1`
+- response:
+```json
+ {
+    "success": true,
+    "deleted": 1,
+    "questions": [
+        {
+          "answer": "1",
+          "category": 1,
+          "difficulty": 3,
+          "id": 3,
+          "question": "how many oxygen are in water molecule?"
+        },
+        {
+          "answer": "2011",
+          "category": 6,
+          "difficulty": 1,
+          "id": 4,
+          "question": "when did Zambia win afcon?"
+        }
+    ],
+    "total_questions": 2,
+}
+```
+
+#### POST /questions
+- General:
+    - Create a question.
+- Request Arguments: question (string) mandatory, answer (string) mandatory, difficulty (int) mandatory, category (int) mandatory
+- Returns: success True, A list of paginated question objects, id of created question and number of total questions 
+- Sample: `curl -X POST http://127.0.0.1:5000/questions -H 'Content-Type:application/json' -d '{"question":"How many hours are in a day?", "answer":"24", "difficulty":1, "category":3}'
+`
+- response:
+```json
+ {
+  "created": 52,
+  "questions": [
+    {
+      "answer": "2011",
+      "category": 6,
+      "difficulty": 1,
+      "id": 4,
+      "question": "when did Zambia win afcon?"
+    },
+    {
+      "answer": "10",
+      "category": 3,
+      "difficulty": 3,
+      "id": 30,
+      "question": "number of provinces in zambia"
+    }
+  ],
+  "success": true,
+  "total_questions": 13
+}
+```
+
+#### POST /questions
+- General:
+    - Fetches questions based on a search term.
+- Request Arguments: searchTerm (string) mandatory
+- Returns: success True, A list of question objects that match the search term and total number of questions
+- Sample: `curl -X POST http://127.0.0.1:5000/questions -H 'Content-Type:application/json' -d '{"question":"Zambia"}'
+`
+- response:
+```json
+ {
+  "questions": [
+    {
+      "answer": "2011",
+      "category": 6,
+      "difficulty": 1,
+      "id": 4,
+      "question": "when did Zambia win afcon?"
+    },
+    {
+      "answer": "100",
+      "category": 1,
+      "difficulty": 1,
+      "id": 29,
+      "question": "zambias highest note"
+    },
+    {
+      "answer": "10",
+      "category": 3,
+      "difficulty": 3,
+      "id": 30,
+      "question": "number of provinces in zambia"
+    },
+    {
+      "answer": "hh",
+      "category": 5,
+      "difficulty": 1,
+      "id": 32,
+      "question": "president of zambia"
+    },
+    {
+      "answer": "nalumango",
+      "category": 5,
+      "difficulty": 1,
+      "id": 33,
+      "question": "vice president of zambia"
+    }
+  ],
+  "success": true,
+  "total_questions": 5
+}
+```
+
+#### GET /categories/{category_id}/questions
+- General:
+    - Fetches all questions based on category.
+- Request Arguments: category_id (int) mandatory
+- Returns: success True, A paginated list of question objects whose category id matches given id, current category name and total number of questions
+- Sample: `curl -X GET http://127.0.0.1:5000/categories/3/questions -H 'Content-Type:application/json'
+`
+- response:
+```json
+{
+  "currentCategory": "Geography",
+  "questions": [
+    {
+      "answer": "10",
+      "category": 3,
+      "difficulty": 3,
+      "id": 30,
+      "question": "number of provinces in zambia"
+    },
+    {
+      "answer": "24",
+      "category": 3,
+      "difficulty": 1,
+      "id": 52,
+      "question": "How many hours are in a day?"
+    }
+  ],
+  "success": true,
+  "totalQuestions": 2
+}
+```
+
+
+
+#### POST /quizzes
+- General:
+    - Fetches a question used to play a quiz. This endpoint takes category and previous question parameters and return a random question within the given category
+- Request Arguments: array of previous question IDs, category object
+- Returns: success true and a question object.
+- Sample: `curl -X POST http://127.0.0.1:5000/quizzes -H 'Content-Type:application/json' -d '{"previous_questions":[], "quiz_category":{"type":"Geography", "id":3}}'
+`
+- response:
+```json
+{
+   "question": {
+    "answer": "24",
+    "category": 3,
+    "difficulty": 1,
+    "id": 52,
+    "question": "How many hours are in a day?"
+  },
   "success": true
 }
 ```
