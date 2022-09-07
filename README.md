@@ -6,7 +6,7 @@ Udacity is requiring an application that can increase the bonding experiences fo
 
 The application supports the following functionalities:
 
-1. Display questions - both all questions and by category. Questions show the question, category and difficulty rating by default and can show/hide the answer.
+1. Display questions - both all questions and by category. Questions show the question, category and difficulty rating and can show/hide the answer.
 2. Delete questions.
 3. Add questions.
 4. Search for questions based on a text query string.
@@ -16,11 +16,11 @@ The application supports the following functionalities:
 
 ### Install Dependencies
 
-1. **PostgreSQL** - also known as Postgres, is a free and open-source relational database management system
+1. **PostgreSQL** - also known as Postgres, is a free and open-source relational database management system.
 
 2. **Python 3.7** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
-3. **Virtual Environment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+3. **Virtual Environment** - We recommend working within a virtual environment whenever using Python for projects. Instructions for setting up a virual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
 4. **PIP Dependencies** - Once your virtual environment is setup and running, install the required dependencies by navigating to the `/backend` directory and running:
 
@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 - [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use to handle the lightweight SQL database. You'll primarily work in `app.py`and can reference `models.py`.
+- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use to handle the lightweight SQL database.
 
 - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross-origin requests from our frontend server.
 
@@ -96,7 +96,7 @@ The API will return three error types when requests fail:
 - General:
     - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
-- Returns: success True and An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
+- Returns: success true and an object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
 - Sample: `curl http://127.0.0.1:5000/categories`
 - response:
 ```json
@@ -116,8 +116,8 @@ The API will return three error types when requests fail:
 #### GET /questions?page={page_number}
 - General:
     - Fetch list of paginated questions,number of total questions, current category and all categories.
-- Request Arguments: page optional
-- Returns: success True, A list of 10 question objects, current_category name, all categories and number of total questions
+- Request Arguments: page_number (int) optional
+- Returns: success true, a list of 10 question objects, current_category name, all categories and number of total questions
 - Sample: `curl http://127.0.0.1:5000/questions?page=2`
 - response:
 ```json
@@ -156,7 +156,7 @@ The API will return three error types when requests fail:
 #### DELETE /questions/{question_id}
 - General:
     - Delete a question resource using a question ID.
-- Request Arguments: question_id mandatory
+- Request Arguments: question_id (int) mandatory
 - Returns: success True, A list of paginated question objects, id of deleted question and number of total questions remaining 
 - Sample: `curl -X DELETE http://127.0.0.1:5000/questions/1`
 - response:
@@ -188,7 +188,7 @@ The API will return three error types when requests fail:
 - General:
     - Create a question.
 - Request Arguments: question (string) mandatory, answer (string) mandatory, difficulty (int) mandatory, category (int) mandatory
-- Returns: success True, A list of paginated question objects, id of created question and number of total questions 
+- Returns: success true, updated list of paginated question objects, id of created question and number of total questions 
 - Sample: `curl -X POST http://127.0.0.1:5000/questions -H 'Content-Type:application/json' -d '{"question":"How many hours are in a day?", "answer":"24", "difficulty":1, "category":3}'
 `
 - response:
@@ -220,8 +220,8 @@ The API will return three error types when requests fail:
 - General:
     - Fetches questions based on a search term.
 - Request Arguments: searchTerm (string) mandatory
-- Returns: success True, A list of question objects that match the search term and total number of questions
-- Sample: `curl -X POST http://127.0.0.1:5000/questions -H 'Content-Type:application/json' -d '{"question":"Zambia"}'
+- Returns: success true, A list of question objects that match the search term and total number of questions
+- Sample: `curl -X POST http://127.0.0.1:5000/questions -H 'Content-Type:application/json' -d '{"searchTerm":"Zambia"}'
 `
 - response:
 ```json
@@ -272,7 +272,7 @@ The API will return three error types when requests fail:
 - General:
     - Fetches all questions based on category.
 - Request Arguments: category_id (int) mandatory
-- Returns: success True, A paginated list of question objects whose category id matches given id, current category name and total number of questions
+- Returns: success true, a paginated list of question objects whose category id matches given id, current category name and total number of questions
 - Sample: `curl -X GET http://127.0.0.1:5000/categories/3/questions -H 'Content-Type:application/json'
 `
 - response:
@@ -304,9 +304,9 @@ The API will return three error types when requests fail:
 
 #### POST /quizzes
 - General:
-    - Fetches a question used to play a quiz. This endpoint takes category and previous question parameters and return a random question within the given category
+    - Fetches a question used to play a quiz. This endpoint takes category and previous question parameters and return a random question within the given category or all categories.
 - Request Arguments: array of previous question IDs, category object
-- Returns: success true and a question object.
+- Returns: success true and a question object or empty question object if no questions are left.
 - Sample: `curl -X POST http://127.0.0.1:5000/quizzes -H 'Content-Type:application/json' -d '{"previous_questions":[], "quiz_category":{"type":"Geography", "id":3}}'
 `
 - response:
